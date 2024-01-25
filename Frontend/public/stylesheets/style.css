@@ -1,4 +1,11 @@
 html, body {
+    font-family: monospace, monospace;
     margin: 0;
     height: 100%;
 }
+.vertical-center {
+    min-height: 100%;  /* Fallback for browsers do NOT support vh unit */
+  
+    display: flex;
+    align-items: center;
+  }
