@@ -1,11 +1,10 @@
 html, body {
     font-family: monospace, monospace;
-    margin: 0;
     height: 100%;
 }
-.vertical-center {
-    min-height: 100%;  /* Fallback for browsers do NOT support vh unit */
-  
+.container {
     display: flex;
-    align-items: center;
+    flex-flow: column;
+    height: 100%;
   }
+
