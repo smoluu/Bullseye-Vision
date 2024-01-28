@@ -1,9 +1,13 @@
 const http = require("http");
 const path = require("path");
 const fs = require("fs");
+const {handle_WebSocket} = require("./websocket")
 const { type } = require("os");
 require("dotenv").config();
+
 const root = __dirname;
+handle_WebSocket()
+
 
 var server = http.createServer(function (req, res) {
   console.log(`${req.method} ${"request to:"} ${req.url}`);
@@ -12,8 +16,6 @@ var server = http.createServer(function (req, res) {
   const extension = path.extname(req.url);
   firstUrlSegment = req.url.split("/")[1]
   const filePath = path.join(root,"public",req.url)
-  
-  console.log("Full filePath: ", filePath)
   
   fs.readFile(filePath, (err, data) => {
     if (err) {
@@ -26,6 +28,8 @@ var server = http.createServer(function (req, res) {
   });
 
 });
+
+
 
 server.listen(process.env.PORT);
 

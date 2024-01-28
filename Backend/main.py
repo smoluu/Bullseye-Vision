@@ -3,6 +3,7 @@ import cv2
 import numpy as np
 import time
 import requests
+import websocket
 
 device = 1
 
@@ -62,7 +63,6 @@ cv2.createTrackbar("thresh_c", "Preview", thresh_c, 255, nothing)
 
 if __name__ == '__main__':
       
-	
 	set_resolution(URL, index=10)
 	requests.get(URL + "/control?var=awb&val={}".format(1 if AWB else 0))
 
