@@ -1,13 +1,11 @@
 const http = require("http");
 const path = require("path");
 const fs = require("fs");
-const {handle_WebSocket} = require("./websocket")
 const { type } = require("os");
 require("dotenv").config();
+require("./websocket.js")
 
 const root = __dirname;
-handle_WebSocket()
-
 
 var server = http.createServer(function (req, res) {
   console.log(`${req.method} ${"request to:"} ${req.url}`);
@@ -30,9 +28,8 @@ var server = http.createServer(function (req, res) {
 });
 
 
-
 server.listen(process.env.PORT);
 
 console.log(
-  `SERVER LISTENING AT: http://${process.env.HOST}:${process.env.PORT}`
+  `HTTP SERVER LISTENING: ${process.env.HOST}:${process.env.PORT}`
 );

@@ -9,7 +9,9 @@ async def hello(websocket):
         message = await websocket.recv()
         print(f"<<< {message}")
 
-        #await websocket.send()
+        response = "python socket received message"
+        await websocket.send(response)
+        print(f"<<< {response}")
 
 async def main():
     async with websockets.serve(hello, "localhost", port):
