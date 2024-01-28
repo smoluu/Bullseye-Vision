@@ -1,5 +1,6 @@
 import asyncio
 import websockets
+from Classes import game
 
 port = 8765
 
@@ -13,10 +14,9 @@ async def hello(websocket):
         await websocket.send(response)
         print(f"<<< {response}")
 
-async def main():
+async def startWSS():
     async with websockets.serve(hello, "localhost", port):
         print(f"Websocket server started on:  localhost:{port}")
         await asyncio.Future()  # run forever
 
-if __name__ == "__main__":
-    asyncio.run(main())
+asyncio.run(startWSS())
