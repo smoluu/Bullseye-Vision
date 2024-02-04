@@ -8,7 +8,7 @@ require("./websocket.js")
 const root = __dirname;
 
 var server = http.createServer(function (req, res) {
-  console.log(`${req.method} ${"request to:"} ${req.url}`);
+  //console.log(`${req.method} ${"request to:"} ${req.url}`);
 
   if(req.url == "/"){req.url = "/index.html"}
   const extension = path.extname(req.url);

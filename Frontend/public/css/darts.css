@@ -1,13 +1,21 @@
 *{
-    outline: 1px solid black;
 }
 html,
 body{
     height: 100%;
 }
 
-#gameBoard{
+.imageContainer{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
     height: 33vh;
+    text-align: center;
+    margin: 5px;
+}
+.imageContainer img{
+    width: 80%;
 }
 
 #gameInfo{
