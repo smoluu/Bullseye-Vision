@@ -4,10 +4,11 @@
 #include "soc/soc.h" //disable brownout
 #include "soc/rtc_cntl_reg.h" //disable brownout
 
-const char* WIFI_SSID = "***";
-const char* WIFI_PASS = "***";
+//  CHANGE!
+const char* WIFI_SSID = "6G";
+const char* WIFI_PASS = "Nastyquickscope";
 
-// Static IP configuration
+// Static IP configuration. CHANGE for second camera!
 IPAddress local_IP(192, 168, 0, 101); // ESP32 static IP
 IPAddress gateway(192, 168, 0, 1);    // IP Address of your network gateway (router)
 IPAddress subnet(255, 255, 255, 0);   // Subnet mask
@@ -56,7 +57,7 @@ void handleJpgHi()
 
 void handleMjpeg()
 {
-  if (!esp32cam::Camera.changeResolution(loRes)) {
+  if (!esp32cam::Camera.changeResolution(hiRes)) {
     Serial.println("SET-HI-RES FAIL");
   }
 
@@ -77,6 +78,10 @@ void setup()
  
   WRITE_PERI_REG(RTC_CNTL_BROWN_OUT_REG, 0); 
   Serial.begin(115200);
+
+  //turn flash on
+  pinMode(4, OUTPUT);
+  digitalWrite(4, HIGH);
 
   if (!WiFi.config(local_IP, gateway, subnet, primaryDNS, secondaryDNS)) {
     Serial.println("STA Failed to configure");

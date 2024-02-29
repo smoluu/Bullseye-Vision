@@ -1,14 +1,12 @@
 from websocket import *
 from Classes import *
+import configparser
+import calibrate
 
+#Load config
+config = configparser.ConfigParser()
+config.read("backend/config.ini")
 
-def main():
-
-	print(game.running)
-
-	#Start Websocket server
-	asyncio.run(startWSS())
-
-
-if __name__ == "__main__":
-	main()
+calibrate.startCalibration()
+#Start Websocket server
+#asyncio.run(startWSS())

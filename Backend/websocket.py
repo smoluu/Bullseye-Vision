@@ -73,5 +73,3 @@ async def startWSS():
     async with ws.serve(handleConnection, "0.0.0.0", port):
         print(f"Websocket server started on:  localhost:{port}")
         await asyncio.Future()  # run forever
-
-asyncio.run(startWSS())
