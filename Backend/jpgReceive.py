@@ -6,7 +6,7 @@ import time
 import configparser
 
 config = configparser.ConfigParser()
-config.read("backend/config.ini")
+config.read("Backend/config.ini")
 URL_LEFT = config["CAMERA"]["URL_LEFT"]
 URL_RIGHT = config["CAMERA"]["URL_RIGHT"]
 

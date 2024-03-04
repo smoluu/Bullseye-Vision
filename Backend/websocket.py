@@ -46,7 +46,7 @@ async def handleConnection(ws):
                         print(f"Clients: {clients}")
                         len(clients)
                     if "message" in data:
-                        print(f"Message received: {data["message"]}")
+                        print(f"Message received: {data['message']}")
 
 
                 except ws.exceptions.ConnectionClosed as e:
