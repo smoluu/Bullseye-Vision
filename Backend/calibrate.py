@@ -36,7 +36,7 @@ def selectPoints(image, mode):
 
     # setting mouse handler for the image
     # and calling the click_event() function
-    cv2.setMouseCallback('image', click_event,mode)
+    cv2.setMouseCallback('image', click_event, mode)
 
     # wait for a key to be pressed to exit
     cv2.waitKey(0)
