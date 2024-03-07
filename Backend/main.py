@@ -8,7 +8,7 @@ config = configparser.ConfigParser()
 config.read("Backend/config.ini")
 
 #calibration
-#calibrate.startCalibration()
+calibrate.startCalibration()
 
 #Start Websocket server
 #asyncio.run(startWSS())

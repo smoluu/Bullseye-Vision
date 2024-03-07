@@ -46,7 +46,7 @@ def startCalibration():
 
     srcR = jpgReceive.getJpg("right")
 
-    board = cv2.imread('Backend/dartboard_points.png',1)
+    board = cv2.imread('Backend/calibration_image.png',1)
 
     #calibration image
     select_points(board)
@@ -68,7 +68,7 @@ def startCalibration():
     board_points = np.array([board_points[0], board_points[1], board_points[2], board_points[3]], dtype=np.float32)
     cam_pointsL = np.array([cam_pointsL[0], cam_pointsL[1], cam_pointsL[2],cam_pointsL[3]], dtype=np.float32)
     cam_pointsR = np.array([cam_pointsR[0], cam_pointsR[1], cam_pointsR[2],cam_pointsR[3]], dtype=np.float32)
-
+    
     cam_to_boardL = cv2.getPerspectiveTransform(cam_pointsL, board_points)
     cam_to_boardR = cv2.getPerspectiveTransform(cam_pointsR, board_points)
     print(cam_to_boardL)
@@ -76,8 +76,7 @@ def startCalibration():
 
     warpL = cv2.warpPerspective(srcL, cam_to_boardL, (1600, 1200))
     warpR = cv2.warpPerspective(srcR, cam_to_boardR, (1600, 1200))
-    np.save("Backend/transformation_matrix_L", cam_to_boardL, allow_pickle=True, fix_imports=True)
-    np.save("Backend/transformation_matrix_R", cam_to_boardR, allow_pickle=True, fix_imports=True)
+    np.savez("Backend/calibration_data.npz", matrixL=cam_to_boardL, matrixR=cam_to_boardR, allow_pickle=True, fix_imports=True)
     cv2.imshow("WarpL", warpL)
     cv2.imshow("WarpR", warpR)
 
