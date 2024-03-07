@@ -22,7 +22,7 @@ def click_event(event, x, y, flags, params):
         print(points)
         clicks = clicks + 1
         if(clicks == 4):
-            cv2.destroyAllWindows()
+            print("Press q to continue")
             return points
 
 
@@ -38,7 +38,7 @@ def select_points(image):
     # wait for a key to be pressed to exit
     cv2.waitKey(0)
     # close the window
-    cv2.destroyAllWindows()    
+    cv2.destroyAllWindows()
 
 
 def startCalibration():
@@ -50,15 +50,17 @@ def startCalibration():
     srcR = cv2.flip(srcR,0)
     srcR = cv2.flip(srcR,1)
 
-    board = cv2.imread('backend/dartboard_points.png',1)
+    board = cv2.imread('Backend/dartboard_points.png',1)
 
     #calibration image
     select_points(board)
     board_points = points
     reset_values()
+    print("fine")
 
     # Left camera
     select_points(srcL)
+    print("fine")
     cam_pointsL = points
     reset_values()
 

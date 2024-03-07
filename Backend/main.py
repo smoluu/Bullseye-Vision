@@ -5,8 +5,10 @@ import calibrate
 
 #Load config
 config = configparser.ConfigParser()
-config.read("backend/config.ini")
+config.read("Backend/config.ini")
 
-calibrate.startCalibration()
+#calibration
+#calibrate.startCalibration()
+
 #Start Websocket server
 #asyncio.run(startWSS())
