@@ -1,10 +1,15 @@
 import cv2
 import numpy as np
 
-def getTransdormedPoint(point,side):
+def warpedImage(src, side: str):
     if side == "left":
-        matrix = np.load("Backend/transformation_matrix_L",)
-    if side == "right":
-        matrix = np.load("Backend/transformation_matrix_R",)
+        matrix = np.load("Backend/transformation_matrix_L.npy",)
+    elif side == "right":
+        matrix = np.load("Backend/transformation_matrix_R.npy",)
     
-    #src_transformed = cv2.transform(src, matrix, None)
+    return cv2.warpPerspective(src, matrix, (1600, 1200))
+
+def pointToScore(point):
+
+    score = 0
+    return score
