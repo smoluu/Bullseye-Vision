@@ -16,24 +16,27 @@ def click_event(event, x, y, flags, params):
     global points
     # checking for left mouse clicks
     if event == cv2.EVENT_LBUTTONDOWN:
- 
-        # displaying the coordinates
-        points.append((x,y))
-        print(points)
-        clicks = clicks + 1
-        if(clicks == 4):
-            print("Press q to continue")
+        if params == "points":
+            points.append((x,y))
+            print(points)
+            clicks = clicks + 1
+            if(clicks == 4):
+                print("Press q to continue")
+                return points
+        if params == "center":
+            points.append((x,y))
+            print(points)
             return points
 
 
-def select_points(image):
+def selectPoints(image, mode):
 
     # displaying the image
     cv2.imshow('image', image)
 
     # setting mouse handler for the image
     # and calling the click_event() function
-    cv2.setMouseCallback('image', click_event)
+    cv2.setMouseCallback('image', click_event,mode)
 
     # wait for a key to be pressed to exit
     cv2.waitKey(0)
@@ -49,19 +52,17 @@ def startCalibration():
     board = cv2.imread('Backend/calibration_image.png',1)
 
     #calibration image
-    select_points(board)
+    selectPoints(board,"points")
     board_points = points
     reset_values()
-    print("fine")
 
     # Left camera
-    select_points(srcL)
-    print("fine")
+    selectPoints(srcL, "points")
     cam_pointsL = points
     reset_values()
 
     # Right camera
-    select_points(srcR)
+    selectPoints(srcR, "points")
     cam_pointsR = points
     reset_values()
 
@@ -76,9 +77,19 @@ def startCalibration():
 
     warpL = cv2.warpPerspective(srcL, cam_to_boardL, (1600, 1200))
     warpR = cv2.warpPerspective(srcR, cam_to_boardR, (1600, 1200))
-    np.savez("Backend/calibration_data.npz", matrixL=cam_to_boardL, matrixR=cam_to_boardR, allow_pickle=True, fix_imports=True)
-    cv2.imshow("WarpL", warpL)
-    cv2.imshow("WarpR", warpR)
+
+    #center points
+    selectPoints(warpL, "center")
+    centerL = points
+    reset_values()
+
+    selectPoints(warpR, "center")
+    centerR = points
+    reset_values()
+
+    centerPoints = np.array([centerL,centerR])
+
+    np.savez("Backend/calibration_data.npz", matrixL=cam_to_boardL, matrixR=cam_to_boardR, centerPoints=centerPoints, allow_pickle=True, fix_imports=True)
 
     cv2.waitKey(0)
 

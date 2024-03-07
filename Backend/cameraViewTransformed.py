@@ -1,8 +1,10 @@
 import jpgReceive
 import transform
 import cv2
+import numpy as np
 
 DEGUB = True
+npz = np.load("Backend/calibration_data.npz",)
 
 while True:
 
@@ -17,9 +19,12 @@ while True:
 
     if DEGUB == True:
         height, width = srcR.shape[:2]
-        center = (width//2, height//2)
+        print(npz["centerPoints"])
+        centerL = npz["centerPoints"][0][0]
+        centerR = npz["centerPoints"][1][0]
 
-        cv2.circle(srcR,(center),7,(255,255,255), 2)
+        cv2.circle(srcL,(centerL),7,(255,255,255), 2)
+        cv2.circle(srcR,(centerR),7,(255,255,255), 2)
 
     cv2.imshow("Transformed Image L", srcL)
     cv2.imshow("Transformed Image R", srcR)

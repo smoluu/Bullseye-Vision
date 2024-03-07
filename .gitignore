@@ -1,6 +1,5 @@
 Backend/venv
 Backend/__pycache__
-Backend/transformation_matrix_L.npy
-Backend/transformation_matrix_R.npy
+Backend/calibration_data.npz
 
 Frontend/node_modules/
