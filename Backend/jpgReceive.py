@@ -56,4 +56,7 @@ def getMjepg(side):
             jpg = bytes[a:b+2]
             bytes = bytes[b+2:]
             FpsCounter()
-            return cv2.imdecode(np.frombuffer(jpg, dtype=np.uint8),-1)
+            img = cv2.imdecode(np.frombuffer(jpg, dtype=np.uint8),-1)
+            img = cv2.flip(img,0)
+            img = cv2.flip(img,1)
+            return img
