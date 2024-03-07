@@ -43,12 +43,8 @@ def select_points(image):
 
 def startCalibration():
     srcL = jpgReceive.getJpg("left")
-    srcL = cv2.flip(srcL,0)
-    srcL = cv2.flip(srcL,1)
 
     srcR = jpgReceive.getJpg("right")
-    srcR = cv2.flip(srcR,0)
-    srcR = cv2.flip(srcR,1)
 
     board = cv2.imread('Backend/dartboard_points.png',1)
 

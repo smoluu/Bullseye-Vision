@@ -34,8 +34,11 @@ def getJpg(side):
     if side == "right":
         imgResp = urllib.request.urlopen(URL_RIGHT + "/cam-hi.jpg")
     imgNp = np.array(bytearray(imgResp.read()),dtype=np.uint8)
+    img = cv2.imdecode(imgNp,-1)
+    img = cv2.flip(img,0)
+    img = cv2.flip(img,1)
     FpsCounter()
-    return cv2.imdecode(imgNp,-1)
+    return img
 
 
 # pull .mjpeg from esp32-cam

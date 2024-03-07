@@ -2,20 +2,24 @@ import jpgReceive
 import transform
 import cv2
 
+DEGUB = True
 
 while True:
 
     srcL = jpgReceive.getJpg("left")
-    srcL = cv2.flip(srcL,0)
-    srcL = cv2.flip(srcL,1)
 
     srcR = jpgReceive.getJpg("right")
-    srcR = cv2.flip(srcR,0)
-    srcR = cv2.flip(srcR,1)
 
     srcL = transform.warpedImage(srcL,"left")
     srcR = transform.warpedImage(srcR,"right")
 
+
+
+    if DEGUB == True:
+        height, width = srcR.shape[:2]
+        center = (width//2, height//2)
+
+        cv2.circle(srcR,(center),7,(255,255,255), 2)
 
     cv2.imshow("Transformed Image L", srcL)
     cv2.imshow("Transformed Image R", srcR)
