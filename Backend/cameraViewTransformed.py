@@ -1,19 +1,19 @@
-import Backend.cameraReceive as cameraReceive
+import cameraReceive
 import transform
 import cv2
 import numpy as np
 
 DEGUB = True
 npz = np.load("Backend/calibration_data.npz",)
-point = []
+clickPoint = []
 
 def click_event(event, x, y, flags, params):
-    global point
+    global clickPoint
     # checking for left mouse clicks
     if event == cv2.EVENT_LBUTTONDOWN:
-        point = x,y
-        print(point)
-        return point
+        clickPoint = x,y
+        print(clickPoint)
+        return clickPoint
     
 while True:
 
@@ -34,8 +34,8 @@ while True:
         cv2.circle(srcL,(centerL),10,(0,0,255), 1)
         cv2.circle(srcR,(centerR),7,(255,0,0), 2)
 
-        if point:
-            cv2.circle(srcL,(point),7,(255,0,0), 2)
+        if clickPoint:
+            cv2.circle(srcL,(clickPoint),7,(255,0,0), 2)
     cv2.imshow("img_L", srcL)
     cv2.setMouseCallback('img_L', click_event)
     #cv2.imshow("Transformed Image R", srcR)

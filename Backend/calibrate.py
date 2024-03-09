@@ -1,6 +1,6 @@
 import cv2
 import numpy as np
-import Backend.cameraReceive as cameraReceive
+import cameraReceive
 
 clicks = 0
 points = []
