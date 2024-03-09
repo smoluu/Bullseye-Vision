@@ -1,6 +1,6 @@
 import cv2
 import numpy as np
-import jpgReceive
+import Backend.cameraReceive as cameraReceive
 
 clicks = 0
 points = []
@@ -45,9 +45,9 @@ def selectPoints(image, mode):
 
 
 def startCalibration():
-    srcL = jpgReceive.getJpg("left")
+    srcL = cameraReceive.getJpg("left")
 
-    srcR = jpgReceive.getJpg("right")
+    srcR = cameraReceive.getJpg("right")
 
     board = cv2.imread('Backend/calibration_image.png',1)
 

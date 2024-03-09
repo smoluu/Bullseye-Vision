@@ -1,4 +1,4 @@
-import jpgReceive
+import Backend.cameraReceive as cameraReceive
 import transform
 import cv2
 import numpy as np
@@ -17,9 +17,9 @@ def click_event(event, x, y, flags, params):
     
 while True:
 
-    srcL = jpgReceive.getMjepg("left")
+    srcL = cameraReceive.getMjepg("left")
 
-    srcR = jpgReceive.getMjepg("right")
+    srcR = cameraReceive.getMjepg("right")
 
     srcL = transform.warpedImage(srcL,"left")
     srcR = transform.warpedImage(srcR,"right")
