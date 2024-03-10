@@ -4,6 +4,7 @@ import cameraReceive
 
 clicks = 0
 points = []
+calibrationPoints = [(320,120),(1280,140),(1280,1080),(320,1080)]
 
 def reset_values():
     global clicks
@@ -18,14 +19,14 @@ def click_event(event, x, y, flags, params):
     if event == cv2.EVENT_LBUTTONDOWN:
         if params == "points":
             points.append((x,y))
-            print(points)
+            print(f'Calibration Points: {points}')
             clicks = clicks + 1
             if(clicks == 4):
                 print("Press q to continue")
                 return points
         if params == "center":
             points.append((x,y))
-            print(points)
+            print(f'Center Point: {points}')
             return points
 
 
@@ -49,13 +50,6 @@ def startCalibration():
 
     srcR = cameraReceive.getJpg("right")
 
-    board = cv2.imread('Backend/calibration_image.png',1)
-
-    #calibration image
-    selectPoints(board,"points")
-    board_points = points
-    reset_values()
-
     # Left camera
     selectPoints(srcL, "points")
     cam_pointsL = points
@@ -66,7 +60,7 @@ def startCalibration():
     cam_pointsR = points
     reset_values()
 
-    board_points = np.array([board_points[0], board_points[1], board_points[2], board_points[3]], dtype=np.float32)
+    board_points = np.array([calibrationPoints[0], calibrationPoints[1], calibrationPoints[2], calibrationPoints[3]], dtype=np.float32)
     cam_pointsL = np.array([cam_pointsL[0], cam_pointsL[1], cam_pointsL[2],cam_pointsL[3]], dtype=np.float32)
     cam_pointsR = np.array([cam_pointsR[0], cam_pointsR[1], cam_pointsR[2],cam_pointsR[3]], dtype=np.float32)
     
@@ -90,6 +84,7 @@ def startCalibration():
     centerPoints = np.array([centerL,centerR])
 
     np.savez("Backend/calibration_data.npz", matrixL=cam_to_boardL, matrixR=cam_to_boardR, centerPoints=centerPoints, allow_pickle=True, fix_imports=True)
+    print("Calibration saved!")
 
     cv2.waitKey(0)
 

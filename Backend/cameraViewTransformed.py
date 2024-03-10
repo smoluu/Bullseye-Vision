@@ -1,43 +1,75 @@
 import cameraReceive
-import transform
+from score import pointToAngle, pointToRadius
 import cv2
 import numpy as np
+npz = np.load("Backend/calibration_data.npz",)
 
 DEGUB = True
-npz = np.load("Backend/calibration_data.npz",)
-clickPoint = []
+warpImage = True
+
+clickPoint = ()
+red = (0,0,255)
+blue = (255,0,0)
+green = (0,255,0)
 
 def click_event(event, x, y, flags, params):
     global clickPoint
     # checking for left mouse clicks
     if event == cv2.EVENT_LBUTTONDOWN:
-        clickPoint = x,y
+        clickPoint = x, y
         print(clickPoint)
         return clickPoint
     
 while True:
 
-    srcL = cameraReceive.getMjepg("left")
+    srcL = cameraReceive.getJpg("left")
+    srcR = cameraReceive.getJpg("right")
 
-    srcR = cameraReceive.getMjepg("right")
-
-    srcL = transform.warpedImage(srcL,"left")
-    srcR = transform.warpedImage(srcR,"right")
-
+    if warpImage:
+        srcL = cv2.warpPerspective(srcL, npz["matrixL"], (1600, 1200))
+        srcR = cv2.warpPerspective(srcR, npz["matrixR"], (1600, 1200))
 
 
     if DEGUB == True:
-        height, width = srcR.shape[:2]
-        centerL = npz["centerPoints"][0][0]
-        centerR = npz["centerPoints"][1][0]
 
-        cv2.circle(srcL,(centerL),10,(0,0,255), 1)
+        #get center points from calibration data
+        centerL = list(npz["centerPoints"][0][0])
+        centerR = list(npz["centerPoints"][1][0])
+
+        # draw center
+        cv2.circle(srcL,(centerL),7,(255,0,0), 2)
         cv2.circle(srcR,(centerR),7,(255,0,0), 2)
 
+        
+
         if clickPoint:
+
+            # draw click point
             cv2.circle(srcL,(clickPoint),7,(255,0,0), 2)
+            cv2.circle(srcR,(clickPoint),7,(255,0,0), 2)
+            
+            # LEFT SIDE
+            radius = pointToRadius(centerL, clickPoint)
+            cv2.circle(srcL, (centerL), int(radius), (255,0,0), 2)
+            cv2.putText(srcL, "R:" + str(int(radius)), (clickPoint[0],clickPoint[1]-10),0,1,red,1,cv2.LINE_AA)
+
+            angleDeg = pointToAngle(centerL, clickPoint)
+            cv2.putText(srcL, "D:" + str(int(angleDeg)), (clickPoint[0],clickPoint[1]-35),0,1,red,1,cv2.LINE_AA)
+
+            # RIGHT SIDE
+            radius = pointToRadius(centerR, clickPoint)
+            cv2.circle(srcR, (centerR), int(radius), (255,0,0), 2)
+            cv2.putText(srcR, "R:" + str(int(radius)), (clickPoint[0],clickPoint[1]-10),0,1,red,1,cv2.LINE_AA)
+            angleDeg = pointToAngle(centerR, clickPoint)
+            cv2.putText(srcR, "D:" + str(int(angleDeg)), (clickPoint[0],clickPoint[1]-35),0,1,red,1,cv2.LINE_AA)
+
+
+
+
     cv2.imshow("img_L", srcL)
+    cv2.imshow("img_R", srcR)
     cv2.setMouseCallback('img_L', click_event)
+    cv2.setMouseCallback('img_R', click_event)
     #cv2.imshow("Transformed Image R", srcR)
 
     # wait for the key and come out of the loop 
