@@ -37,7 +37,6 @@ def getJpg(side):
     img = cv2.imdecode(imgNp,-1)
     img = cv2.flip(img,0)
     img = cv2.flip(img,1)
-    #img = img[0:1200, 200:1400] # crop image from 1600x1200 to 1200x1200
     FpsCounter()
     return img
 
@@ -60,5 +59,4 @@ def getMjepg(side):
             img = cv2.imdecode(np.frombuffer(jpg, dtype=np.uint8),-1)
             img = cv2.flip(img,0)
             img = cv2.flip(img,1)
-            img = img[0:1200, 200:1400]
             return img

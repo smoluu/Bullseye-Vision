@@ -1,5 +1,5 @@
 import cameraReceive
-from score import pointToAngle, pointToRadius
+from score import pointToAngle, pointToRadius, pointToScore
 import cv2
 import numpy as np
 npz = np.load("Backend/calibration_data.npz",)
@@ -17,7 +17,6 @@ def click_event(event, x, y, flags, params):
     # checking for left mouse clicks
     if event == cv2.EVENT_LBUTTONDOWN:
         clickPoint = x, y
-        print(clickPoint)
         return clickPoint
     
 while True:
@@ -54,14 +53,16 @@ while True:
             cv2.putText(srcL, "R:" + str(int(radius)), (clickPoint[0],clickPoint[1]-10),0,1,red,1,cv2.LINE_AA)
 
             angleDeg = pointToAngle(centerL, clickPoint)
-            cv2.putText(srcL, "D:" + str(int(angleDeg)), (clickPoint[0],clickPoint[1]-35),0,1,red,1,cv2.LINE_AA)
+            cv2.putText(srcL, "D:" + str(angleDeg), (clickPoint[0],clickPoint[1]-35),0,1,red,1,cv2.LINE_AA)
+            score = pointToScore(centerL,clickPoint)
+            cv2.putText(srcL, "S:" + str(score), (clickPoint[0],clickPoint[1]-60),0,1,red,1,cv2.LINE_AA)
 
             # RIGHT SIDE
             radius = pointToRadius(centerR, clickPoint)
             cv2.circle(srcR, (centerR), int(radius), (255,0,0), 2)
             cv2.putText(srcR, "R:" + str(int(radius)), (clickPoint[0],clickPoint[1]-10),0,1,red,1,cv2.LINE_AA)
             angleDeg = pointToAngle(centerR, clickPoint)
-            cv2.putText(srcR, "D:" + str(int(angleDeg)), (clickPoint[0],clickPoint[1]-35),0,1,red,1,cv2.LINE_AA)
+            cv2.putText(srcR, "D:" + str(angleDeg), (clickPoint[0],clickPoint[1]-35),0,1,red,1,cv2.LINE_AA)
 
 
 
