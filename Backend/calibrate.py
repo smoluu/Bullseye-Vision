@@ -47,8 +47,10 @@ def selectPoints(image, mode):
 
 def startCalibration():
     srcL = cameraReceive.getJpg("left")
+    cv2.imwrite("Backend/boardL.jpg", srcL)
 
     srcR = cameraReceive.getJpg("right")
+    cv2.imwrite("Backend/boardR.jpg", srcR)
 
     # Left camera
     selectPoints(srcL, "points")
