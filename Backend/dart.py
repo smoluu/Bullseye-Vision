@@ -1,8 +1,9 @@
 import cv2
 import numpy as np
 import cameraReceive
+import math
 
-def detectDart():
+def getNewDartContour():
     img1 = cv2.imread("Backend/boardL.jpg")
     img1 = cv2.cvtColor(img1,cv2.COLOR_BGR2GRAY)
     img1 = cv2.GaussianBlur(img1,(35,35),0)
@@ -23,36 +24,70 @@ def detectDart():
 
     
     contours, hierarchy = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-    cv2.drawContours(img2, contours,-1, (0,255,0), 2)
-    print(f"Contour count: {len(contours)}")
+
+    return  contours
 
 
-    return  img2
+def getTipPoint(contours):
+    if len(contours) > 0:
+
+        triangle = cv2.minEnclosingTriangle(contours[0])
+        triangle = triangle[1].astype(int)
+        tPoints = []
+        tPoints.append(tuple(triangle[0][0]))
+        tPoints.append(tuple(triangle[1][0]))
+        tPoints.append(tuple(triangle[2][0]))
+        tPoints.sort()
 
 
-def getTipPoint(img):
-    output = img
-    gray = cv2.cvtColor(output, cv2.COLOR_BGR2GRAY) 
-    edged = cv2.Canny(gray, 30, 200) 
-    ret,thresh = cv2.threshold(output, 40, 255, 0)
-    contours, hierarchy = cv2.findContours(edged, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
-    if len(contours) != 0:
-
-        # draw in blue the contours that were founded
-        cv2.drawContours(output, contours, -1, 255, 3)
-
-        # find the biggest countour (c) by the area
-        c = max(contours, key = cv2.contourArea)
-        x,y,w,h = cv2.boundingRect(c)
-
-        # draw the biggest contour (c) in green
-        cv2.rectangle(output,(x,y),(x+w,y+h),(0,255,0),2)
-
-    return  output
 
 
-while True:
-    img = detectDart()
-    cv2.imshow("Result", img)
-    if cv2.waitKey(1) & 0xFF == ord('q'):
-        break
+        #calculate index of closest contour point to tpoints[0]
+        minDist = 1000
+        closestContourIndex = 0
+
+        for  index,point in enumerate(contours[0]):
+            dist = math.dist(tPoints[0],(point[0]))
+            if minDist > dist:
+                minDist = dist
+                closestContourIndex = index
+
+        tipX = contours[0][closestContourIndex][0][0]
+        tipY = contours[0][closestContourIndex][0][1]
+        #cv2.circle(img,(tipX,tipY),7,(0,0,255),-1)
+
+        return  tipX,tipY
+    
+    return None, None
+
+
+if __name__ == "__main__":
+    while True:
+        cont = getNewDartContour()
+        x,y = getTipPoint(cont)
+        img = cameraReceive.getJpg("left")
+        if x and y:
+            triangle = cv2.minEnclosingTriangle(cont[0])
+            triangle = triangle[1].astype(int)
+            tPoints = []
+            tPoints.append(tuple(triangle[0][0]))
+            tPoints.append(tuple(triangle[1][0]))
+            tPoints.append(tuple(triangle[2][0]))
+            tPoints.sort()
+            # draw triangle
+            cv2.line(img,tPoints[0],tPoints[1], (255,0,0), 2, 0)
+            cv2.line(img,tPoints[1],tPoints[2], (0,255,0), 2, 0)
+            cv2.line(img,tPoints[2],tPoints[0], (0,0,255), 2, 0)
+            cv2.drawContours(img, cont,-1, (0,255,0), 2)
+            # draw tip point
+            cv2.circle(img,(x,y),3,(0,0,255),2)
+            # centroid of contour
+            M = cv2.moments(cont[0])
+            cX = int(M["m10"] / M["m00"])
+            cY = int(M["m01"] / M["m00"])
+            cv2.circle(img,(cX,cY),3,(0,0,255),2)
+
+
+        cv2.imshow("img_L", img)
+        if cv2.waitKey(1) == ord('q'):
+            break

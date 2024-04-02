@@ -1,5 +1,6 @@
 import cameraReceive
 from score import pointToAngle, pointToRadius, pointToScore
+from dart import getNewDartContour, getTipPoint
 import cv2
 import numpy as np
 npz = np.load("Backend/calibration_data.npz",)
@@ -23,6 +24,8 @@ while True:
 
     srcL = cameraReceive.getJpg("left")
     srcR = cameraReceive.getJpg("right")
+
+
 
     if warpImage:
         srcL = cv2.warpPerspective(srcL, npz["matrixL"], (1600, 1200))
@@ -63,9 +66,14 @@ while True:
             cv2.putText(srcR, "R:" + str(int(radius)), (clickPoint[0],clickPoint[1]-10),0,1,red,1,cv2.LINE_AA)
             angleDeg = pointToAngle(centerR, clickPoint)
             cv2.putText(srcR, "D:" + str(angleDeg), (clickPoint[0],clickPoint[1]-35),0,1,red,1,cv2.LINE_AA)
+    
+        # draw tip point
+        dartContour = getNewDartContour()
+        tipX, tipY = getTipPoint(dartContour)
+        tip = cv2.perspectiveTransform(np.array([[(tipX,tipY)]],np.float64), npz["matrixL"])[0]
+        cv2.circle(srcL,(int(tip[0][0]),int(tip[0][1])),5,red,2)
 
-
-
+        
 
     cv2.imshow("img_L", srcL)
     cv2.imshow("img_R", srcR)
