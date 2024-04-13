@@ -13,7 +13,7 @@ wss = new WebSocket.Server({ port: 8080 });
 
 // Start connection to python Websocket server
 connectToPytonWs = () => {
-  var reconnectInterval = 5 * 1000;
+  var reconnectInterval = 2 * 1000;
   pythonWs = new WebSocket("ws://localhost:8765");
 
   pythonWs.on("open", function () {
@@ -40,13 +40,13 @@ connectToPytonWs();
 
 wss.on("connection", (wss) => {
   clients.push(wss._socket.address().address);
-  console.log(clients);
+  console.log("WS Client connection succesfull", clients);
 
   // Send clients to python wss so it knows to send data or not
 
   pythonWs.send(
     JSON.stringify({
-      clients: clients,
+      message: clients,
     })
   );
 

@@ -1,75 +1,62 @@
 import asyncio
 import websockets as ws
-from Classes import game
 import json
 import base64
+from main import handleMessage
 
 port = 8765
-clients = []
 
-async def sendData(ws,data):
-        data = json.dumps(data)
-        await ws.send(data)
-        print(f"SENT: {data}")
-
-# sends images of dartboar if there is clients
-async def sendImage(ws):
-        while True:
-                if len(clients) > 0:
-                    # insert dartboard image here
-                    with open("Backend/testimg.png", "rb") as image:
-                         image = image.read()
-                    image = base64.b64encode(image).decode("utf-8")
-                    data = {
-                         "type": "image",
-                         "content": image
-                    }
-                    
-                    await ws.send(json.dumps(data))
-                    await asyncio.sleep(1)
-                else:
-                    await asyncio.sleep(1)
-
-async def handleConnection(ws):
-
-    await ws.send("Connection succesfull")
-
-    async def receiveData(ws):
-          while True:
-                try:
-                    data = await ws.recv()
-                    data = json.loads(data)
-
-                    if "clients" in data:
-                        global clients
-                        clients = data["clients"]
-                        print(f"Clients: {clients}")
-                        len(clients)
-                    if "message" in data:
-                        print(f"Message received: {data['message']}")
+clients = set()
 
 
-                except ws.exceptions.ConnectionClosed as e:
-                    # Handle connection closed exception
-                    print(f"Connection closed: {e}")
-
-                except ws.exceptions.WebSocketException as e:
-                    # Handle other WebSocket exceptions
-                    print(f"WebSocket exception: {e}")
-
-                except Exception as e:
-                    # Handle other exceptions
-                    print(f"Exception: {e}")
-                     
-    # do stuff with message
+# Function to send data to all connected clients
+async def sendData(data):
+    # Convert data to JSON string
+    json_data = json.dumps(data)
+    # Send data to all connected clients
+    for client in clients:
+        await client.send(json_data)
+    print(f"Sent message to clients: {data}")
 
 
-    await asyncio.gather(
-        receiveData(ws),
-        sendImage(ws)
-    )
-                
+
+# sends images of dartboard if there is clients
+async def sendImage():
+    while True:
+        # insert dartboard image here
+        with open("Backend/boardL.jpg", "rb") as image:
+            image = image.read()
+        image = base64.b64encode(image).decode("utf-8")
+        data = {"type": "image", "content": image}
+
+        for client in clients:
+            await client.send(json.dumps(data))
+        await asyncio.sleep(1)
+
+# WebSocket connection handler
+async def handleConnection(websocket, path):
+    # Add the client to the set of connected clients
+    clients.add(websocket)
+    try:
+        # Keep the connection open and handle incoming messages
+        async for message in websocket:
+            data = json.loads(message)
+            print(f"Received message from client: {data}")
+
+            # You can handle incoming messages here if needed
+            if "message" in data and "type" in data["message"]:
+                handleMessage(data["message"])
+
+    finally:
+        # Remove the client from the set of connected clients when the connection is closed
+        clients.remove(websocket)
+
+
 async def startWSS():
     async with ws.serve(handleConnection, "0.0.0.0", port):
         print(f"Websocket server started on:  localhost:{port}")
+        await sendImage()
         await asyncio.Future()  # run forever
+
+
+asyncio.run(startWSS())

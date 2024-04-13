@@ -1,62 +1,276 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-      integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
-      crossorigin="anonymous"
-    />
-    <script
-      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
-      integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
-      crossorigin="anonymous"
-    ></script>
-    <script src="/js/darts.js" defer></script>
-    <link href="/css/darts.css" rel="stylesheet" />
-    <title>Darts</title>
-  </head>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous" />
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+    crossorigin="anonymous"></script>
+  <link href="/css/darts.css" rel="stylesheet" />
+  <title>Darts</title>
+</head>
+
+<div class="container-fluid">
 
   <body data-bs-theme="dark">
-    <div class="collapse justify-content-end" id="navbarToggleExternalContent">
-      <div class="p-2">
-        <h5 class="text-body-emphasis h4">Collapsed content</h5>
-        <span class="text-body-secondary">Toggleable via the navbar brand.</span>
-      </div>
-    </div>
-
+    <!-- TOP MENU -->
     <nav class="navbar">
-      <div class="container-fluid">
-        <ul class="navbar-nav">
-          <li class="nav-item">
-            <button class="btn btn-success" aria-current="page" href="#">Start game</button>
-          </li>
-        </ul>
+      
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <button id="startGameButton" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#createGameModal">
+            Start game
+          </button>
+        </li>
+      </ul>
 
-        <button
-          class="navbar-toggler"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#navbarToggleExternalContent"
-          aria-controls="navbarToggleExternalContent"
-          aria-expanded="false"
-          aria-label="Toggle navigation"
-        >
-          <span class="navbar-toggler-icon"></span>
-        </button>
+      <div class="collapse" id="navbarToggleExternalContent" data-bs-theme="dark">
+        <div class="bg-dark p-4">
+          <h5 class="text-body-emphasis h4">Collapsed content</h5>
+          <span class="text-body-secondary">Toggleable via the navbar brand.</span>
+        </div>
       </div>
+
+      <nav class="navbar navbar-dark bg-dark">
+        <div class="container-fluid">
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+            data-bs-target="#navbarToggleExternalContent" aria-controls="navbarToggleExternalContent"
+            aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+        </div>
+      </nav>
     </nav>
 
-    <div class="container-fluid" id="gameBoard">
+    <!-- Create Game Modal -->
+    <div class="modal fade" id="createGameModal" tabindex="-1" aria-labelledby="createGameModalLabel"
+      aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="createGameModalLabel">
+              Create game
+            </h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <form id="settingsForm">
+              <h2>Add players</h2>
+              <div class="d-flex justify-content-evenly m-2">
+                <input type="text" class="input-group-text" id="nameInput" placeholder="Enter a name" />
+                <button class="btn btn-primary" type="button" onclick="addName()">
+                  Add
+                </button>
+              </div>
+              <ul id="nameList" class="list-group"></ul>
+              <input type="hidden" id="nameListInput" name="nameList" />
+
+              <h2 class="m-2">Game settings</h2>
+
+              <div class="container gameOptions">
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" name="gameOptionScore" id="gameOptionScore" value="301"
+                    checked />
+                  <label class="form-check-label" for="gameOptionScore">301</label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" name="gameOptionScore" id="gameOptionScore"
+                    value="501" />
+                  <label class="form-check-label" for="gameOptionScore">501</label>
+                </div>
+              </div>
+
+              <div class="container gameOptions">
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" name="gameOptionIn" id="gameOptionIn" value="STRAIGHT_IN"
+                    checked />
+                  <label class="form-check-label" for="gameOptionIn">STRAIGHT IN</label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" name="gameOptionIn" id="gameOptionIn"
+                    value="DOUBLE_IN" />
+                  <label class="form-check-label" for="gameOptionIn">DOUBLE IN</label>
+                </div>
+              </div>
+
+              <div class="container gameOptions">
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" name="gameOptionOut" id="gameOptionOut"
+                    value="STRAIGHT_OUT" checked />
+                  <label class="form-check-label" for="gameOptionOut">STRAIGHT OUT</label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" name="gameOptionOut" id="gameOptionOut"
+                    value="DOUBLE_OUT" />
+                  <label class="form-check-label" for="gameOptionOut">DOUBLE OUT</label>
+                </div>
+              </div>
+            </form>
+            <div class="modal-footer">
+              <button id="closeModalButton" type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+                aria-label="Close">
+                Close
+              </button>
+              <button type="button" class="btn btn-success" onclick="sendFormData()">
+                Start game
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Create Game Modal END -->
+
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+        data-bs-target="#navbarToggleExternalContent" aria-controls="navbarToggleExternalContent" aria-expanded="false"
+        aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+    </div>
+    <!-- TOP MENU -->
+
+    <!-- GAME INFO -->
+    <div class="container" id="gameBoard">
       <div class="imageContainer">
         <img id="dartBoard" src="" alt="dart board" />
       </div>
     </div>
-
-    <div class="container" id="gameInfo">
-      <p>game info here</p>
+    
+    <div class="row" id="gameInfo">
+      
     </div>
-  </body>
+    <!-- GAME INFO END -->
+</body>
+
+<script>
+  document
+    .getElementById("settingsForm")
+    .addEventListener("keydown", function (event) {
+      if (event.key === "Enter") {
+        event.preventDefault();
+      }
+    });
+
+  function addName() {
+    var nameInput = document.getElementById("nameInput");
+    var name = nameInput.value.trim();
+    if (name !== "") {
+      var nameList = document.getElementById("nameList");
+      var listItem = document.createElement("li");
+      listItem.className =
+        "list-group-item d-flex w-100 justify-content-between";
+      listItem.textContent = name;
+      var removeButton = document.createElement("button");
+      removeButton.textContent = "X";
+      removeButton.className = "btn btn-danger badge";
+      removeButton.onclick = function () {
+        nameList.removeChild(listItem);
+      };
+      listItem.appendChild(removeButton);
+      nameList.appendChild(listItem);
+      nameInput.value = ""; // Clear input field after adding name
+    } else {
+      alert("Please enter a valid name.");
+    }
+  }
+
+  function sendFormData() {
+    var nameList = document.getElementById("nameList");
+    var names = [];
+    nameList.querySelectorAll("li").forEach(function (li) {
+      names.push(li.textContent.trim().slice(0, -1));
+    });
+    document.getElementById("nameListInput").value = names.join(", ");
+
+    var form = document.getElementById("settingsForm");
+    var formData = new FormData(form);
+    var formValues = {};
+    formValues["type"] = "gameOptions";
+    // Loop through FormData entries and populate formValues object
+    for (var entry of formData.entries()) {
+      formValues[entry[0]] = entry[1];
+    }
+    ws.send(JSON.stringify(formValues));
+
+    console.log(formValues);
+  }
+
+  // WEBSOCKET CODE
+
+  const ws = new WebSocket("ws://localhost:8080");
+
+  // Handle opening of WebSocket connection to Node.js
+  ws.onopen = function () {
+    console.log("Connected to Node.js WebSocket server");
+    ws.send("Hello from the website!");
+  };
+
+  // Handle messages received from Node.js WebSocket server
+  ws.addEventListener("message", (e) => {
+    try {
+      const data = JSON.parse(e.data);
+      console.log(data);
+
+      // Game start
+      if (data.type === "gameOptions") {
+        var modalButton = document.getElementById("closeModalButton");
+        var startGameButton =
+          document.getElementById("startGameButton");
+        modalButton.click();
+        startGameButton.style.display = "none";
+
+        //create doms for players info
+        names = data.nameList.split(",")
+        console.log(names)
+        for(var i = 0;i < names.length; i++){
+          var cardContainer = document.getElementById("gameInfo")
+          
+          var colDiv = document.createElement('div');
+          colDiv.className = 'col';
+          var cardDiv = document.createElement('div');
+          cardDiv.className = 'card';
+          var cardHeaderDiv = document.createElement('div');
+          cardHeaderDiv.className = 'card-header';
+          var cardListDiv = document.createElement('ul');
+          cardListDiv.className = 'list-group list-group-flush';
+          var cardListItemDiv = document.createElement('li');
+          cardListItemDiv.className = 'list-group-item';
+
+          // Append card elements to the container
+          cardDiv.appendChild(cardHeaderDiv);
+          colDiv.appendChild(cardDiv);
+          cardDiv.appendChild(cardListDiv);
+          cardListDiv.appendChild(cardListItemDiv)
+          cardContainer.appendChild(colDiv);
+
+          // Insert values to elements
+          cardHeaderDiv.textContent = names[i]
+          cardListItemDiv.textContent = data.gameOptionScore
+        }
+      }
+      // Receive image
+      if (data.type === "image") {
+        const dartBoard = document.getElementById("dartBoard");
+        const decodedData = atob(data.content);
+
+        // Convert to ArrayBuffer
+        const arrayBuffer = new Uint8Array(decodedData.length);
+        for (let i = 0; i < decodedData.length; i++) {
+          arrayBuffer[i] = decodedData.charCodeAt(i);
+        }
+
+        // Create Blob
+        const blob = new Blob([arrayBuffer], { type: "image/png" });
+        dartBoard.src = URL.createObjectURL(blob);
+      }
+    } catch (error) {
+      console.log("ERROR parsing JSON", error);
+    }
+  });
+
+  // WEBSOCKET CODE END
+</script>
+
 </html>

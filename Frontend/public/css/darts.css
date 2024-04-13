@@ -5,7 +5,7 @@ body{
     height: 100%;
 }
 
-.imageContainer{
+.imageContainer img{
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -15,9 +15,22 @@ body{
     margin: 5px;
 }
 .imageContainer img{
-    width: 80%;
+    width: 100%;
+    object-fit: contain;
 }
 
 #gameInfo{
     height: 33vh;
+    text-align: center;
+}
+.card-header{
+    font-weight: bolder;
+}
+.row col {
+    min-width: 150px;
+}
+.gameOptions{
+    margin: 5px;
+    background-color: #2b3035;
+    border-radius: 10px;
 }

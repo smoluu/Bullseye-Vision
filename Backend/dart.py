@@ -4,20 +4,19 @@ import cameraReceive
 import math
 
 def getNewDartContour():
-    img1 = cv2.imread("Backend/boardL.jpg")
-    img1 = cv2.cvtColor(img1,cv2.COLOR_BGR2GRAY)
-    img1 = cv2.GaussianBlur(img1,(35,35),0)
+    img = cv2.imread("Backend/boardL.jpg")
+    img = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
+    img = cv2.GaussianBlur(img,(25,25),0)
     
-    ret, thresh1 = cv2.threshold(img1, 150, 255, cv2.THRESH_BINARY)
+    ret, thresh1 = cv2.threshold(img, 150, 255, cv2.THRESH_BINARY)
     img2 = cameraReceive.getJpg("left")
 
     img2Gray = cv2.cvtColor(img2,cv2.COLOR_BGR2GRAY)
-    img2Blur = cv2.GaussianBlur(img2Gray,(35,35),0)
+    img2Blur = cv2.GaussianBlur(img2Gray,(25,25),0)
     
     #ret, thresh2 = cv2.threshold(img2, 150, 255, cv2.THRESH_BINARY)
     
-    diff = cv2.absdiff(img1,img2Blur)
-    #gray = cv2.cvtColor(diff,cv2.COLOR_BGR2GRAY)
+    diff = cv2.absdiff(img,img2Blur)
     ret, mask = cv2.threshold(diff,20,255,cv2.THRESH_BINARY)
     mask = cv2.GaussianBlur(mask,(35,35),0)
     ret, mask = cv2.threshold(mask,25,255,cv2.THRESH_BINARY)
@@ -25,7 +24,7 @@ def getNewDartContour():
     
     contours, hierarchy = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
-    return  contours
+    return  contours, mask
 
 
 def getTipPoint(contours):
@@ -63,7 +62,7 @@ def getTipPoint(contours):
 
 if __name__ == "__main__":
     while True:
-        cont = getNewDartContour()
+        cont, tempImg = getNewDartContour()
         x,y = getTipPoint(cont)
         img = cameraReceive.getJpg("left")
         if x and y:
@@ -82,12 +81,13 @@ if __name__ == "__main__":
             # draw tip point
             cv2.circle(img,(x,y),3,(0,0,255),2)
             # centroid of contour
-            M = cv2.moments(cont[0])
-            cX = int(M["m10"] / M["m00"])
-            cY = int(M["m01"] / M["m00"])
-            cv2.circle(img,(cX,cY),3,(0,0,255),2)
+            #M = cv2.moments(cont[0])
+            #cX = int(M["m10"] // M["m00"])
+            #cY = int(M["m01"] // M["m00"])
+            #cv2.circle(img,(cX,cY),3,(0,0,255),2)
 
 
         cv2.imshow("img_L", img)
+        cv2.imshow("temp", tempImg)
         if cv2.waitKey(1) == ord('q'):
             break
