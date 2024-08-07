@@ -30,9 +30,9 @@ def FpsCounter():
 #pull .jpg from esp32-cam
 def getJpg(side):
     if side == "left":
-        imgResp = urllib.request.urlopen(f'{URL_LEFT}/{resolution}.jpg')
+        imgResp = urllib.request.urlopen(f'{"http://"}{URL_LEFT}/{resolution}.jpg')
     if side == "right":
-        imgResp = urllib.request.urlopen(f'{URL_RIGHT}/{resolution}.jpg')
+        imgResp = urllib.request.urlopen(f'{"http://"}{URL_RIGHT}/{resolution}.jpg')
     imgNp = np.array(bytearray(imgResp.read()),dtype=np.uint8)
     img = cv2.imdecode(imgNp,-1)
     img = cv2.flip(img,0)

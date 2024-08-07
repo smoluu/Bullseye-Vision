@@ -6,14 +6,16 @@ import asyncio
 import websockets as ws
 import json
 import base64
-
+import findCameras
 # Load config
 config = configparser.ConfigParser()
 config.read("Backend/config.ini")
 
-# calibration
-# calibrate.startCalibration()
+# find camera adresses and put them into config.ini
+findCameras.find_cameras()
 
+# calibration
+calibrate.startCalibration()
 
 # Handle message coming from websocket
 async def handleMessage(message):

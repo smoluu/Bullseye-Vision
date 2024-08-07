@@ -68,7 +68,7 @@ while True:
             cv2.putText(srcR, "D:" + str(angleDeg), (clickPoint[0],clickPoint[1]-35),0,1,red,1,cv2.LINE_AA)
     
         # draw tip point
-        dartContour = getNewDartContour()
+        dartContour, mask = getNewDartContour()
         tipX, tipY = getTipPoint(dartContour)
         tip = cv2.perspectiveTransform(np.array([[(tipX,tipY)]],np.float64), npz["matrixL"])[0]
         cv2.circle(srcL,(int(tip[0][0]),int(tip[0][1])),5,red,2)

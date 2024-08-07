@@ -3,3 +3,6 @@ Backend/__pycache__
 Backend/calibration_data.npz
 
 Frontend/node_modules/
+Backend/speech.mp3
+Backend/boardL.jpg
+Backend/boardR.jpg

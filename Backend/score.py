@@ -1,6 +1,6 @@
 import math
 
-#start, end, score
+# start, end, score
 angleScoreRanges = (
     (0, 8, 20),
     (8.001, 27, 1),
@@ -25,13 +25,13 @@ angleScoreRanges = (
     (351.501, 360, 20),
 )
 
-#start, end, multiplier
+# start, end, multiplier
 radiusMultiplierRanges = (
-    (511,549,3), #triple
-    (305, 340, 2), #double
+    (511,549,2), #triple
+    (305, 340, 3), #double
 )
 
-#start, end, score
+# start, end, score
 radiusBullRanges = (
     (20.01, 52, 25), #bull
     (0, 20, 50) #bullseye
@@ -41,8 +41,8 @@ radiusBullRanges = (
 def pointToAngle(center, point):
     cx = center[0]
     cy = center[1]
-    px = point[0]
-    py = point[1]
+    px = point[0][0]
+    py = point[0][1]
 
     # Calculate the differences in x and y coordinates relative to the center
     deltaX = px - cx
@@ -59,9 +59,9 @@ def pointToAngle(center, point):
 def pointToRadius(center, point):
     cx = center[0]
     cy = center[1]
-    
-    px = point[0]
-    py = point[1]
+
+    px = point[0][0]
+    py = point[0][1]
 
     # Calculate radius
     radius = ((px - cx) ** 2 + (py - cy) ** 2) ** 0.5
